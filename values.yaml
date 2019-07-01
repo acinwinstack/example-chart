@@ -5,11 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: prydonius/todo
-  tag: 1.0.0
+  repository: acinwinstack/ssh
+  tag: ssh
   pullPolicy: IfNotPresent
 
-application: ""
 sshUsername: user
 sshPassword: P@ssw0rd
 
