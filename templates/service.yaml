@@ -8,9 +8,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
       protocol: TCP
-      name: http
   selector:
     app: ubuntu-ssh
     user: {{ .Values.sshUsername }}
