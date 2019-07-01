@@ -1,52 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mychart.fullname" . }}
-  labels:
-{{ include "mychart.labels" . | indent 4 }}
+  name: {{ .Values.sshUsername }}-ubuntu-deploy
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "mychart.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: ubuntu-ssh
+      user: {{ .Values.sshUsername }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "mychart.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        app: ubuntu-ssh
+        user: {{ .Values.sshUsername }}
     spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      - name: ubuntu
+        image: acinwinstack/ubuntu:ssh
+        ports:
+        - containerPort: 22
+        command: ["bash", "-c", "service ssh start; useradd -p $(openssl passwd -1 {{ .Values.sshPassword }}) {{ .Values.sshUsername }}; while true; do sleep 100; done"]
