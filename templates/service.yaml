@@ -12,5 +12,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "mychart.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app: ubuntu-ssh
+    user: {{ .Values.sshUsername }}
