@@ -20,12 +20,6 @@ questions:
     description: "Image Tag"
     type: string
     label: Image Tag
-- variable: application
-  default: ""
-  type: string
-  description: "Application Name"
-  required: true
-  label: App Name
 - variable: sshUsername
   default: "user"
   description: "User of the application"
